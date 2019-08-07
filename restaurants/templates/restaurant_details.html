@@ -2,6 +2,10 @@
 {% block content %}
 <main class='restaurant'>
     <h2>{{ restaurant.name }}</h2>
+    <h3>Hours: {{ restaurant.opening_time}} - {{ restaurant.closing_time }}</h3>
+    <h3>{{ restaurant.address }} {{ restaurant.phone }}</h3>
+    <p>{{ restaurant.description }}</p>
+    <p><img src="{{ restaurant.image }}" class="details-image" /></p>
     {% if user.is_authenticated %}
       {% if restaurant.owner == user %}
       <p> <a href="{% url 'restaurant_edit' id=restaurant.pk %}">Edit restaurant details</a> </p>
