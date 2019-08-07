@@ -6,18 +6,25 @@ from django.views.decorators.http import require_http_methods
 from restaurants.forms import LoginForm, ProfileForm, ReservationForm, RestaurantForm
 from restaurants.models import Category, Profile, Restaurant
 
+
 def restaurants_list(request):
     restaurants = Restaurant.objects.all()
     context = {'restaurants': restaurants, 'title': 'Restaurants'}
     return render(request, 'restaurants_list.html', context)
 
+
 def restaurant_show(request, id):
     restaurant = Restaurant.objects.get(pk=id)
     context = {'restaurant': restaurant, 'title': restaurant.name}
     if request.user.is_authenticated:
-        context['reservations'] = restaurant.reservations.filter(user=request.user)
+        context['reservations'] = restaurant.reservations.filter(
+            user=request.user)
         context['reservation_form'] = ReservationForm()
+
+        # IF user is owner:
+        # for each reser
     return render(request, 'restaurant_details.html', context)
+
 
 @login_required
 def restaurant_edit(request, id):
@@ -30,8 +37,9 @@ def restaurant_edit(request, id):
                 return redirect(reverse('restaurant_show', args=[restaurant.pk]))
             else:
                 title = "Edit {}".format(restaurant.name)
-                context = {'restaurant': restaurant, 'form': form, 'title': title}
-                return render(request, 'restaurant_edit.html', context) 
+                context = {'restaurant': restaurant,
+                           'form': form, 'title': title}
+                return render(request, 'restaurant_edit.html', context)
         else:
             form = RestaurantForm(instance=restaurant)
             title = "Edit {}".format(restaurant.name)
@@ -39,7 +47,6 @@ def restaurant_edit(request, id):
             return render(request, 'restaurant_edit.html', context)
     else:
         return redirect(reverse('restaurants_list'))
-    
 
 
 def categories_list(request):
@@ -47,10 +54,12 @@ def categories_list(request):
     context = {'categories': categories}
     return render(request, 'categories.html', context)
 
+
 def category_show(request, id):
     category = Category.objects.get(pk=id)
     context = {'category': category}
     return render(request, 'category.html', context)
+
 
 @login_required
 @require_http_methods(["POST"])
@@ -64,8 +73,10 @@ def reservation_create(request, restaurant_id):
         form.save()
         return redirect(reverse('restaurant_show', args=[restaurant.pk]))
     else:
-        context = {'restaurant': restaurant, 'reservation_form': form, 'title': restaurant.name}
+        context = {'restaurant': restaurant,
+                   'reservation_form': form, 'title': restaurant.name}
         return render(request, 'restaurant_details.html', context)
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -81,7 +92,8 @@ def login_view(request):
                     login(request, user)
                     return redirect(reverse('home'))
                 else:
-                    form.add_error('username', 'This account has been disabled')
+                    form.add_error(
+                        'username', 'This account has been disabled')
             else:
                 form.add_error('username', 'Login failed')
     else:
@@ -90,9 +102,11 @@ def login_view(request):
     context = {'form': form}
     return render(request, 'login.html', context)
 
+
 def logout_view(request):
     logout(request)
     return redirect(reverse('home'))
+
 
 @login_required
 def profile(request):
@@ -101,6 +115,7 @@ def profile(request):
         form = ProfileForm()
         context['form'] = form
     return render(request, 'profile.html', context)
+
 
 @login_required
 @require_http_methods(["POST"])
@@ -113,6 +128,7 @@ def profile_create(request):
     else:
         context = {'title': 'Profile', 'form': form}
         return render(request, 'profile.html', context)
+
 
 def signup(request):
     if request.user.is_authenticated:
