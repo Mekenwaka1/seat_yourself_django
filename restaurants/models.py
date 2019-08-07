@@ -43,6 +43,7 @@ class Restaurant(models.Model):
     image = models.URLField(max_length=255, null=True)
     description = models.TextField(null=True)
     opening_time = models.TimeField()
+    last_opening_time = models.TimeField()
     closing_time = models.TimeField()
 
     def __str__(self):
