@@ -20,6 +20,8 @@ def restaurant_show(request, id):
         context['reservations'] = restaurant.reservations.filter(
             user=request.user)
         context['reservation_form'] = ReservationForm()
+    if request.user == restaurant.owner:    
+        context['all_reservations'] = restaurant.reservations.all()
 
         # IF user is owner:
         # for each reser

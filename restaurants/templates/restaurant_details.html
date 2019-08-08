@@ -12,7 +12,7 @@
       <p> <a href="{% url 'restaurant_edit' id=restaurant.pk %}">Edit restaurant details</a> </p>
         {% if restaurant.reservations.exists %}
           <ol>
-            {% for reservation in restaurant.reservations.all %}
+            {% for reservation in all_reservations %}
               <li>
                 <p> <time datetime="{{ reservation.date_and_time }}">{{ reservation.date }} at {{ reservation.time }} </time> </p>
                 <p> {{ reservation.user.profile.last_name }}, party of {{ reservation.party_size }} </p>
